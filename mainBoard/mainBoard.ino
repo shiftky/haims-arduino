@@ -2,6 +2,7 @@
 
 /* digital pin */
 #define  IR_IN  0
+#define  IR_LED 9
 #define  SW1    14
 #define  SW2    15
 #define  LED_G  16
@@ -19,9 +20,15 @@ int data_cnt = 0;
 char buf[BUF_SIZE];
 unsigned int data[DATA_SIZE];
 
+IRrecv irrecv(IR_IN);
+IRsend irsend;
+decode_results ir_results;
+
 void setup()
 {
   pinMode(IR_IN, INPUT);
+  pinMode(IR_LED, OUTPUT);
+  digitalWrite(0, LOW);
   
   pinMode(SW1, INPUT);
   pinMode(SW2, INPUT);
@@ -29,17 +36,24 @@ void setup()
   pinMode(LED_R, OUTPUT);
   
   Serial.begin(9600);
+  
+  irrecv.enableIRIn();
 }
 
 void loop()
 {
+  /* Mode 0: IRSend
+          1: IRRecv
+          2: Get current illumination
+          3: Get current temperature
+  */
+  
   switch(recvCmd()){
     case 0:
-      Serial.println("mode 0");
       recvIRData(buf, data);
-      for(int i=0; i < data_cnt; i++){
-        Serial.println(data[i]);
-      }
+      irsend.sendRaw(data, data_cnt, 38);
+      Serial.println("send!");
+      delay(100);
       break;
     
     case 1:
