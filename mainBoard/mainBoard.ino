@@ -47,7 +47,7 @@ void loop()
       break;
 
     case 2:
-      Serial.println("mode 2");
+      getCurrentIllumination();
       break;
     
     case 3:
@@ -129,4 +129,14 @@ void getCurrentTemp()
   int temp = map(voltage, 900, 4800, -30, 100);
   
   Serial.println(temp);
+}
+
+void getCurrentIllumination()
+{
+  int sensor_val = analogRead(PHOTO_TR);
+  float voltage = ((long)sensor_val * 5000) / 1024;
+  float microamp = (voltage * 1000) / 1000;
+  float lx = microamp / (290 / 100);
+  
+  Serial.println(lx);
 }
