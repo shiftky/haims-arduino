@@ -50,8 +50,8 @@ void loop()
       Serial.println("mode 2");
       break;
     
-    case 10:
-      Serial.println("mode 10");
+    case 3:
+      getCurrentTemp();
       break;
       
     default:
@@ -120,4 +120,13 @@ void clearData(unsigned int* data)
   for(int i=0; i < sizeof(data); i++){
     buf[i] = 0;
   }
+}
+
+void getCurrentTemp()
+{
+  int sensor_val = analogRead(TEMP_IC);
+  int voltage = map(sensor_val, 0, 1023, 0, 5000);
+  int temp = map(voltage, 900, 4800, -30, 100);
+  
+  Serial.println(temp);
 }
