@@ -5,8 +5,8 @@
 #define  IR_LED 9
 #define  SW1    14
 #define  SW2    15
-#define  LED_G  16
-#define  LED_R  17
+#define  LED_R  16
+#define  LED_G  17
 
 /* analog pin */
 #define  PHOTO_TR  0
@@ -28,12 +28,15 @@ void setup()
 {
   pinMode(IR_IN, INPUT);
   pinMode(IR_LED, OUTPUT);
-  digitalWrite(0, LOW);
+  digitalWrite(IR_LED, LOW);
   
   pinMode(SW1, INPUT);
   pinMode(SW2, INPUT);
+  
   pinMode(LED_G, OUTPUT);
   pinMode(LED_R, OUTPUT);
+  digitalWrite(LED_G, LOW);
+  digitalWrite(LED_R, LOW);
   
   Serial.begin(9600);
   
@@ -47,7 +50,7 @@ void loop()
           2: Get current illumination
           3: Get current temperature
   */
-  
+
   switch(recvCmd()){
     case 0:
       recvIRData(buf, data);
@@ -57,14 +60,18 @@ void loop()
       break;
     
     case 1:
+      delay(500);
+      Serial.println();
       Serial.println("mode 1");
       break;
-
+      
     case 2:
+      delay(500);
       getCurrentIllumination();
       break;
     
     case 3:
+      delay(500);
       getCurrentTemp();
       break;
       
@@ -142,6 +149,7 @@ void getCurrentTemp()
   int voltage = map(sensor_val, 0, 1023, 0, 5000);
   int temp = map(voltage, 900, 4800, -30, 100);
   
+  Serial.println();
   Serial.println(temp);
 }
 
@@ -152,5 +160,6 @@ void getCurrentIllumination()
   float microamp = (voltage * 1000) / 1000;
   float lx = microamp / (290 / 100);
   
+  Serial.println();
   Serial.println(lx);
 }
