@@ -11,6 +11,10 @@
 /* digital pin */
 #define  PIN_IR_IN   0
 #define  PIN_LED_OUT 9
+#define  LED_G  17
+#define  LED_R  16
+#define  SW1    14
+#define  SW2    15
 
 /* buffer */
 #define BUF_SIZE 32
@@ -37,6 +41,10 @@ void setup()
 {
   SensorInit();
   SerialInit();
+  
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_R, OUTPUT);
+  
   pinMode(PIN_IR_IN, INPUT);
   pinMode(PIN_LED_OUT, OUTPUT);
   irrecv.enableIRIn();
@@ -57,9 +65,11 @@ void loop()
     }
     switch(c){
       case '0':
+        digitalWrite(LED_R, HIGH);
         recvIRData(buf, data);
         irsend.sendRaw(data, data_cnt+1, 38);
-        delay(200);
+        digitalWrite(LED_R, LOW);
+        blink_led();
         break;
         
       case '1':
@@ -74,8 +84,19 @@ void loop()
         break;
     }
     
-    if (irrecv.decode(&results)) {
+    if (digitalRead(SW1) == LOW && irrecv.decode(&results)) {
       IRDump(&results);
       irrecv.resume();
     }
 }
+
+void blink_led()
+{
+  for (int i=0; i<2; i++) {
+    digitalWrite(LED_G, HIGH);
+    delay(50);
+    digitalWrite(LED_G, LOW);
+    delay(50);
+  }
+}
+
