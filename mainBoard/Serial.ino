@@ -15,9 +15,14 @@ void recvIRData(char* buf, unsigned int* data)
   clearData(data);
   data_cnt = 0;
   buf_cnt = 0;
-  
+
   Serial.flush();
+  unsigned long start_time = millis();
   while(1){
+    if (millis() - start_time >= 10000) {    // time out
+      break;
+    }
+
     if(Serial.available()){
       char c = Serial.read();
 

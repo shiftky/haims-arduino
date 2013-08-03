@@ -41,10 +41,10 @@ void setup()
 {
   SensorInit();
   SerialInit();
-  
+
   pinMode(LED_G, OUTPUT);
   pinMode(LED_R, OUTPUT);
-  
+
   pinMode(PIN_IR_IN, INPUT);
   pinMode(PIN_LED_OUT, OUTPUT);
   irrecv.enableIRIn();
@@ -71,19 +71,19 @@ void loop()
         digitalWrite(LED_R, LOW);
         blink_led();
         break;
-        
+
       case '1':
         getCurrentIllumination();
         break;
-      
+
       case '2':
         getCurrentTemp();
         break;
-        
+
       default:
         break;
     }
-    
+
     if (digitalRead(SW1) == LOW && irrecv.decode(&results)) {
       IRDump(&results);
       irrecv.resume();
